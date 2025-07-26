@@ -1,0 +1,13 @@
+/* src/index.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  font-family: 'Segoe UI', Inter, system-ui, sans-serif; /* Apply font globally */
+}
+
+/* Add any other global styles below these lines */
+/* You will eventually replace styles from Login.css, RegisterVendor.css etc. with Tailwind classes */
