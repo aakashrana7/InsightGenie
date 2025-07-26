@@ -1,115 +1,168 @@
-// // src/pages/Login.jsx
-// import { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import './Login.css'; // Optional: create this file for styling
-
-// const Login = () => {
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const navigate = useNavigate();
-
-//   const handleLogin = (e) => {
-//     e.preventDefault();
-    
-//     // 🔒 Mock auth (later replace with real API call)
-//     if (email === 'vendor@example.com' && password === '123456') {
-//       // Save mock token
-//       localStorage.setItem('token', 'fake-token');
-//       navigate('/register'); // Redirect to profile setup
-//     } else {
-//       alert('Invalid credentials');
-//     }
-//   };
-
-//   return (
-//     <div className="login-container">
-//       <h2>InsightGenie Login</h2>
-//       <form onSubmit={handleLogin} className="login-form">
-//         <input 
-//           type="email" 
-//           placeholder="Email" 
-//           value={email}
-//           onChange={(e) => setEmail(e.target.value)}
-//           required
-//         />
-//         <input 
-//           type="password" 
-//           placeholder="Password"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//           required
-//         />
-//         <button type="submit">Login</button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Login;
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: ""
+  });
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setError("");
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // You can store token here if needed
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Validate credentials (in a real app, this would be server-side)
+      if (credentials.email && credentials.password) {
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", credentials.email);
+        }
         navigate("/dashboard");
       } else {
-        setError(data.message || "Login failed");
+        setError("Please enter both email and password");
       }
     } catch (err) {
-      console.error("Login error:", err);
-      setError("Server error");
+      setError("Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-box">
-        <h2>Login</h2>
-        {error && <p className="error">{error}</p>}
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-            required
-          />
-          <button type="submit">Login</button>
-        </form>
-        <p className="switch">
-          Don't have an account?{" "}
-          <span onClick={() => navigate("/register")}>Register Here</span>
-        </p>
+    <div className="login-page">
+      <div className="login-container">
+        <div className="platform-info">
+          <div className="logo">
+            <span className="logo-icon">🧠</span>
+            <h1>InsightGenie</h1>
+          </div>
+          <h2>Your AI-powered sales intelligence platform</h2>
+          <ul className="features">
+            <li className="feature-item">
+              <span className="feature-icon">📊</span>
+              <span>Real-time sales analytics</span>
+            </li>
+            <li className="feature-item">
+              <span className="feature-icon">🤖</span>
+              <span>AI-driven recommendations</span>
+            </li>
+            <li className="feature-item">
+              <span className="feature-icon">🚀</span>
+              <span>Boost your business performance</span>
+            </li>
+          </ul>
+        </div>
+
+        <div className="login-form-container">
+          <div className="login-form">
+            <h1>Welcome </h1>
+            <p className="subtitle">Sign in to access your dashboard</p>
+
+            {error && <div className="error-message">{error}</div>}
+
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="email">Email Address</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email"
+                  value={credentials.email}
+                  onChange={handleChange}
+                  placeholder="your@email.com" 
+                  required
+                  autoComplete="username"
+                />
+              </div>
+
+              <div className="form-group">
+                <div className="password-header">
+                  <label htmlFor="password">Password</label>
+                  <a href="/forgot-password" className="forgot-password">Forgot password?</a>
+                </div>
+                <input 
+                  type="password" 
+                  id="password" 
+                  name="password"
+                  value={credentials.password}
+                  onChange={handleChange}
+                  placeholder="**********" 
+                  required
+                  autoComplete="current-password"
+                />
+              </div>
+
+              <div className="form-options">
+                <div className="remember-me">
+                  <input 
+                    type="checkbox" 
+                    id="remember" 
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  <label htmlFor="remember">Remember me</label>
+                </div>
+              </div>
+
+              <button 
+                type="submit" 
+                className="signin-button"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <span className="button-loader"></span>
+                ) : (
+                  <>
+                    Sign In <span className="arrow">→</span>
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="divider">
+              <span className="divider-line"></span>
+              <span className="divider-text">Or continue with</span>
+              <span className="divider-line"></span>
+            </div>
+
+            <div className="social-login">
+              <button className="social-button google">
+                <span className="social-icon">G</span>
+                Google
+              </button>
+              <button className="social-button microsoft">
+                <span className="social-icon">M</span>
+                Microsoft
+              </button>
+            </div>
+
+            <div className="register-link">
+              Don't have an account? <a href="/register">Register here</a>
+            </div>
+
+            <div className="terms">
+              By signing in, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
