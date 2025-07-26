@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./RegisterVendor.css";
 
 const RegisterVendor = () => {
@@ -8,6 +9,7 @@ const RegisterVendor = () => {
   const [formData, setFormData] = useState({
     name: "",
     emailOrPhone: "",
+    password: "",
     profilePic: null,
     businessName: "",
     businessType: "",
@@ -25,6 +27,7 @@ const RegisterVendor = () => {
     if (step === 1) {
       if (!formData.name.trim()) newErrors.name = "Name is required";
       if (!formData.emailOrPhone.trim()) newErrors.emailOrPhone = "Email or phone is required";
+      if (!formData.password.trim()) newErrors.password = "Password is required";
     } else if (step === 2) {
       if (!formData.businessName.trim()) newErrors.businessName = "Business name is required";
       if (!formData.businessType) newErrors.businessType = "Business type is required";
@@ -64,20 +67,32 @@ const RegisterVendor = () => {
 
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
-  const handleSubmit = () => {
-    if (!formData.terms) {
-      alert("Please accept terms and conditions");
-      return;
+const handleSubmit = async () => {
+  if (!formData.terms) {
+    alert("Please accept terms and conditions");
+    return;
+  }
+
+  try {
+    // Send formData directly as JSON
+    const res = await axios.post("http://localhost:5000/register", formData, {
+      headers: { "Content-Type": "application/json" }, // tell backend it's JSON
+    });
+
+    if (res.data.success) {
+      alert("Registration successful! You will be redirected to login.");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } else {
+      alert("Registration failed: " + res.data.message);
     }
-    
-     console.log("Form submitted:", formData);
-    alert("Registration successful! You will be redirected to login.");
-    
-    // Redirect to login after 2 seconds
-    setTimeout(() => {
-      navigate("/"); // Assuming your login route is "/"
-    }, 2000);
-  };
+  } catch (err) {
+    console.error("Registration error:", err);
+    alert("Something went wrong. Please try again.");
+  }
+};
+
 
   return (
     <div className="register-vendor-container">
@@ -125,7 +140,20 @@ const RegisterVendor = () => {
                 />
                 {errors.emailOrPhone && <p className="error-message">{errors.emailOrPhone}</p>}
               </div>
-              
+
+              <div className="form-group">
+                <label className="form-label">Password*</label>
+                <input
+                  type="text"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={`form-input ${errors.password ? 'error' : ''}`}
+                  placeholder="********"
+                />
+                {errors.password && <p className="error-message">{errors.password}</p>}
+              </div>
+
               <div className="form-group">
                 <label className="form-label">Profile Picture</label>
                 <div className="file-input-container">
