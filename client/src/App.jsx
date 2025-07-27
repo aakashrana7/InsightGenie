@@ -7,6 +7,7 @@ import Insights from './pages/Insights';
 import Login from './pages/Login';
 import RegisterVendor from './pages/RegisterVendor';
 import UploadData from './pages/UploadData'; // Add this import
+import VendorProfile from './pages/VendorProfile';
 
 
 function AppContent() {
@@ -23,7 +24,7 @@ function AppContent() {
         <Route path="/insights" element={<Insights />} />
         <Route path="/register" element={<RegisterVendor />} />
         <Route path="/upload" element={<UploadData />} /> {/* Add this route */}
-
+        <Route path="/vendor-profile" element={<VendorProfile />} />
         
       </Routes>
     </>

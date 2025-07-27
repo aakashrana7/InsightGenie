@@ -73,25 +73,35 @@ const handleSubmit = async () => {
     return;
   }
 
+  const payload = {
+  phone_number: formData.emailOrPhone.trim(),
+  username: formData.businessName.trim(),
+  password: formData.password,
+  business_type: formData.businessType,
+  address: formData.address,
+  website: formData.website,
+  gst_no: formData.gstNo,
+};
+
+
   try {
-    // Send formData directly as JSON
-    const res = await axios.post("http://localhost:5000/register", formData, {
-      headers: { "Content-Type": "application/json" }, // tell backend it's JSON
+    const res = await axios.post("http://localhost:5000/register", payload, {
+      headers: { "Content-Type": "application/json" },
     });
 
-    if (res.data.success) {
-      alert("Registration successful! You will be redirected to login.");
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
+    if (res.status === 201) {
+      alert("Registration successful! Redirecting...");
+      setTimeout(() => navigate("/"), 2000);
     } else {
-      alert("Registration failed: " + res.data.message);
+      alert("Registration failed: " + (res.data.error || "Unknown error"));
     }
   } catch (err) {
     console.error("Registration error:", err);
     alert("Something went wrong. Please try again.");
   }
 };
+
+
 
 
   return (
