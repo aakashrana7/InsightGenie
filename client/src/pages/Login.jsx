@@ -5,7 +5,7 @@ import "./Login.css";
 const Login = () => {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    email: "",
+    phone: "",
     password: ""
   });
   const [rememberMe, setRememberMe] = useState(false);
@@ -22,39 +22,55 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
+  e.preventDefault();
+  setIsLoading(true);
+  setError("");
 
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Validate credentials (in a real app, this would be server-side)
-      if (credentials.email && credentials.password) {
-        if (rememberMe) {
-          localStorage.setItem("rememberedEmail", credentials.email);
-        }
-        navigate("/dashboard");
-      } else {
-        setError("Please enter both email and password");
-      }
-    } catch (err) {
-      setError("Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  try {
+    const response = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        phone_number: credentials.phone,
+        password: credentials.password
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+  setError(result.error || "Login failed. Please try again.");
+} else {
+  // ✅ Save phone_number to localStorage
+  localStorage.setItem("phone_number", credentials.phone);
+
+  if (rememberMe) {
+    localStorage.setItem("rememberedPhone", credentials.phone);
+  }
+
+  navigate("/dashboard");
+}
+
+  } catch (err) {
+    setError("Network error. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
 
   return (
     <div className="login-page">
       <div className="login-container">
         <div className="platform-info">
           <div className="logo">
-            <span className="logo-icon">🧠</span>
+            <span className="logo-icon">💫</span>
             <h1>InsightGenie</h1>
           </div>
-          <h2>Your AI-powered sales intelligence platform</h2>
+          <h2>Your AI-powered business intelligence platform</h2>
           <ul className="features">
             <li className="feature-item">
               <span className="feature-icon">📊</span>
@@ -68,6 +84,10 @@ const Login = () => {
               <span className="feature-icon">🚀</span>
               <span>Boost your business performance</span>
             </li>
+            <li className="feature-item">
+              <span className="feature-icon">🚀</span>
+              <span>Data entry using ICR</span>
+            </li>
           </ul>
         </div>
 
@@ -80,18 +100,19 @@ const Login = () => {
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="email">Email Address</label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  name="email"
-                  value={credentials.email}
-                  onChange={handleChange}
-                  placeholder="your@email.com" 
-                  required
-                  autoComplete="username"
-                />
+                <label htmlFor="phone">Phone Number</label>
+                  <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone"
+                    value={credentials.phone}
+                    onChange={handleChange}
+                    placeholder="e.g. 9876543210" 
+                    required
+                    autoComplete="tel"
+                   />
               </div>
+
 
               <div className="form-group">
                 <div className="password-header">

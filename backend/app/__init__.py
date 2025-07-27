@@ -15,4 +15,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(vendor_bp)
 
+    from services.OCR import ocr_bp 
+    app.register_blueprint(ocr_bp, url_prefix="/ocr")
+
     return app
