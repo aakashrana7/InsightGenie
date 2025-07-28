@@ -1,12 +1,33 @@
-# React + Vite
+# InsightGenie
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+InsightGenie is a smart analytics and vendor support platform designed to empower small and medium retail businesses. It offers features such as OCR-based receipt analysis, demand forecasting, competitive insights, and business profile management—all wrapped in an intuitive web application.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 📸 **Receipt Scanner (OCR)** – Extract structured data from retail receipts using OCR.
+- 📊 **Insights Dashboard** – View purchase trends, sales breakdown, and seasonal patterns.
+- 🔍 **Competitor Tracker** – Monitor public data like news and LinkedIn for competitive intelligence.
+- 📈 **Demand Forecasting** – Forecast product or category demand based on region and time (seasonal logic without AI).
+- 🧾 **Vendor Profile** – Manage your business information, including GST, category, and address.
+- 🔐 **Auth System** – Secure login/logout functionality (JWT or localStorage based).
+- 💡 **Placeholder UI** – Seamless UI/UX with placeholders for AI models and future enhancements.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🧰 Tech Stack
+
+### Frontend:
+- React.js (with React Router)
+- Axios
+- SCSS / CSS Modules
+
+### Backend:
+- Flask (Python)
+- SQLite (`users.db` for vendor data)
+- Tesseract OCR
+- Pandas (for basic analytics)
+- REST APIs
+
+---
