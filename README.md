@@ -1,4 +1,4 @@
-# InsightGenie
+# InsightGenie - AI powered Business Intelligence tool
 
 InsightGenie is a smart analytics and vendor support platform designed to empower small and medium retail businesses. It offers features such as OCR-based receipt analysis, demand forecasting, competitive insights, and business profile management—all wrapped in an intuitive web application.
 
